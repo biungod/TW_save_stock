@@ -28,16 +28,20 @@
 		{
 			$id=$data[1];
 			$name=$data[0];
-			$text=file('https://tw.stock.yahoo.com/q/q?s='.$id.$time);
-			foreach ($text as $line_num => $line) {
-				//echo "Line #<b>{$line_num}</b> : " . htmlspecialchars($line) . "<br />\n";
-				if (preg_match("/><b>/i", $line))
+			$text=file('https://tw.stock.yahoo.com/quote/'.$id);			
+			foreach ($text as $line_num => $line)
+			{
+				if (strpos($line,'<span class="Fz(32px) Fw(b) Lh(1) Mend(16px) D(f) Ai(c)') !== false)
 				{
+					$replace_example00 = explode('<span class="Fz(32px) Fw(b) Lh(1) Mend(16px) D(f) Ai(c)',$line);
+					$replace_example01 = str_replace(array(">","<"),'_',$replace_example00[1]);
+					$replace_example02 = explode('_',$replace_example01);
 					echo '<tr style="border: 1px solid black; border-collapse: collapse;">';
-					echo '<td>'.$name.'[ '.$id.' ]</td>';
-					echo $line;
-					echo '</tr>';
-				} 
+					echo '<td>'.$name.'[&nbsp;'.$id.'&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;'.$replace_example02[1].'</td>';
+					//echo ;
+					echo '</tr>';					
+					break;
+				}
 			}
 		}
 		fclose($fp);
